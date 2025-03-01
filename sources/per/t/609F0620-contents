@@ -1,0 +1,143 @@
+#ANSWERS to LAB 3
+
+# TASK 1: Working Directory
+
+getwd()
+
+# TASK 2: open and read files: SPRUCE
+
+spruce.df <- read.csv("SPRUCE.csv", header=TRUE, sep=",")
+# or do file.choose inside read.table or read.csv
+
+spruce.df
+head(spruce.df)
+
+# TASK 3:
+
+#scatter plot
+library(ggplot2)
+quartz()
+plot(Height~BHDiameter,bg="Blue",pch=21,cex=1.2,ylim=c(0,1.1*max(Height)),xlim=c(0,1.1*max(BHDiameter)), data=spruce.df, main = "BHDiameter vs Height: Scatter plot")
+
+# By visually inspecting the plot, the relation between BHDiameter and Height
+# seems to be more of a quadratic or non-linear relation rather than a straight
+# line relationship
+
+#lowless smoother scatter plot
+library(s20x)
+
+layout(matrix(1:4,nr=2,nc=2,byrow=TRUE))
+
+trendscatter(Height~BHDiameter, f = 0.5, data = spruce.df)
+trendscatter(Height~BHDiameter, f = 0.6, data = spruce.df)
+trendscatter(Height~BHDiameter, f = 0.7, data = spruce.df)
+
+# linear model
+
+spruce.lm=with(spruce.df, lm(Height~BHDiameter))
+plot(Height~BHDiameter,bg="Blue",pch=21,cex=1.2,ylim=c(0,1.1*max(Height)),xlim=c(0,1.1*max(BHDiameter)), data=spruce.df, main = "BHDiameter vs Height: Scatter plot")
+abline(spruce.lm)
+
+# Using a linear model is not accurate for the data set, instead the smoother
+# curve is a better fit.
+
+
+# TASK 4:
+
+layout(matrix(1:4,nr=2,nc=2,byrow=TRUE))
+layout.show(4)
+
+#square 1:
+spruce.lm=with(spruce.df, lm(Height~BHDiameter))
+plot(Height~BHDiameter,bg="Blue",pch=21,cex=1.2,ylim=c(0,1.1*max(Height)),xlim=c(0,1.1*max(BHDiameter)), data=spruce.df, main = "BHDiameter vs Height: Scatter plot")
+abline(spruce.lm)
+
+# square 2:
+yhat=fitted(spruce.lm)
+
+with(spruce.df,
+     plot(Height~BHDiameter, main = "RSS",
+          xlab = "BHDiameter", ylab = "Height",
+          bg = "Blue", pch = 21, cex = 1,
+          ylim = c(0,1.1*max(Height)), xlim = c(0,1.1*max(BHDiameter)))
+     )
+
+with(spruce.df,{
+  segments(BHDiameter,Height,BHDiameter,yhat)
+})
+abline(spruce.lm)
+
+#square 3:
+with(spruce.df,
+   plot(Height~BHDiameter, main = "MSS",
+        xlab = "BHDiameter", ylab = "Height",
+        bg = "Blue", pch=21, cex = 1,
+        ylim = c(0,1.1*max(Height)), xlim = c(0,1.1*max(BHDiameter)))
+   )
+
+with(spruce.df, abline(h = mean(Height)))
+
+with(spruce.df, segments(BHDiameter, mean(Height), BHDiameter, yhat, col = "Red"))
+abline(spruce.lm)
+
+#square 4:
+with(spruce.df,
+     plot(Height~BHDiameter, main = "TSS",
+          bg = "Blue", pch=21, cex=1,
+          ylim = c(0, 1.1*max(Height)), xlim = c(0,1.1*max(BHDiameter)))
+     )
+
+with(spruce.df, abline(h = mean(Height)))
+
+with(spruce.df,segments(BHDiameter,Height,BHDiameter,mean(Height),col="Green"))
+
+#calculate TSS, MSS, and RSS:
+
+TSS = with(spruce.df,sum((Height-mean(Height))^2))
+TSS
+
+MSS = with(spruce.df,sum((yhat-mean(Height))^2))
+MSS
+
+RSS = with(spruce.df,sum((Height-yhat)^2))
+RSS
+
+MSS/TSS
+# MSS divided by TSS is R^2. As this value is not near 1, it shows ups that a
+# linear model is not ideal for the data
+
+RSS + MSS
+# RSS + MSS does equal TSS
+
+# TASK 5:
+
+summary(spruce.lm)
+
+#slope and intercept:
+coef(spruce.lm)
+
+#then write down equation of fitted line...
+
+# predict the height of spruce when diam is 15, 18, 20 cm:
+predict(spruce.lm, data.frame(BHDiameter = c(15, 18, 20)))
+
+
+# TASK 6:
+
+library(ggplot2)
+
+gplot = ggplot(spruce.df, aes(x = BHDiameter, y = Height, col = BHDiameter))
+gplot = gplot + geom_point() +geom_line() + geom_smooth(method = "lm")
+gplot = gplot +ggtitle("Height vs BHDiameter")
+gplot
+
+
+
+v$MTBE -> mtbe
+library(Intro2R)
+mtbe
+table(mtbe$Aquifier,mtbe$`MTBE-Detect`)
+table(mtbe$Aquifier,mtbe$`MTBE-Detect`) -> tbb
+addmargins(tbb)
+
+
