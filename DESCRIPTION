@@ -13,7 +13,13 @@ Description: Functions from the labs.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports:
+    stats,
+    graphics,
+    grDevices
 RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Depends: 
+    R (>= 3.5)
